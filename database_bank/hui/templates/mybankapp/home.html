@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+    <style>
+        /* Стили для полей поиска и кнопки поиска */
+        .search {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Стили для выпадающего меню */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Стили для надписи по центру страницы */
+        .welcome-message {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        /* Дополнительные стили по вашему усмотрению */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Главная страница</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">Главная</a></li>
+            <li><a href="#">XML</a></li>
+            <li><a href="#">RSS</a></li>
+            <li><a href="#">Партнеры</a></li>
+            <li><a href="#">О нас</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropbtn">Сервисы</a>
+                <div class="dropdown-content">
+                    <a href="#">Виджеты</a>
+                    <a href="#">Погода</a>
+                </div>
+            </li>
+            <li><a href="#">Базы данных</a></li>
+            <li><a href="{% url 'register' %}">Регистрация</a></li>
+
+            <li><a href="{% url 'login' %}">Вход</a></li>
+        </ul>
+    </nav>
+    <section>
+        <!-- Добавляем поле поиска -->
+        <div class="search">
+            <input type="search" placeholder="Поиск по сайту">
+            <button type="submit">Искать</button>
+        </div>
+        <!-- Добавляем надпись по центру страницы -->
+        <div class="welcome-message">
+            Добро пожаловать в базу данных "Банк".<br>
+            Для работы с сайтом воспользуйтесь меню, которое находится сверху сайта. На сайте реализована работа с базой данных, а также предоставлена информация о БД и предметной области.<br>
+            Просим обратить внимание, что для добавления данных потребуется авторизоваться (войти в учётную запись или зарегистрироваться, если у вас её нет).<br>
+            Приятной работы!
+        </div>
+    </section>
+    <footer
+        class="footer">© 2023 Чумаченко Дмитрий   НИЯУ МИФИ
+    </footer>
+</body>
+</html>
