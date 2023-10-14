@@ -52,7 +52,7 @@
             <li><a href="#">Главная</a></li>
             <li><a href="#">XML</a></li>
             <li><a href="#">RSS</a></li>
-            <li><a href="#">Партнеры</a></li>
+            <li><a href={% url 'profile' %}>Профиль</a></li>
             <li><a href="#">О нас</a></li>
             <li class="dropdown">
                 <a href="#" class="dropbtn">Сервисы</a>
@@ -62,9 +62,16 @@
                 </div>
             </li>
             <li><a href="#">Базы данных</a></li>
-            <li><a href="{% url 'register' %}">Регистрация</a></li>
 
-            <li><a href="{% url 'login' %}">Вход</a></li>
+            {% if is_authenticated %}
+                <li style="margin-left: 1211px"><a href="{% url 'logout' %}">Выйти</a></li>
+                <li><h3 style="color: white">{{ request.user }}</h3></li>
+            {% else %}
+                <li style="margin-left: 1115px"><a href="{% url 'registration' %}">Регистрация</a></li>
+                <li ><a href="{% url 'login' %}">Вход</a></li>
+            {% endif %}
+
+
         </ul>
     </nav>
     <section>
