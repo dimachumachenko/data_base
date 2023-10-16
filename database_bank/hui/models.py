@@ -13,13 +13,13 @@ from django.contrib.auth.models import User
 # Модель Счета
 class Account(models.Model):
 
-    number = models.CharField(max_length=20, unique=True)
+    username = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    owner = models.IntegerField()
-    open_date = models.DateField()
-    close_date = models.DateField()
-    active = models.BooleanField()
-    limit = models.DecimalField(max_digits=10, decimal_places=2)
+    owner = models.IntegerField(blank=True)
+    open_date = models.DateField(auto_now_add=True, blank=True)
+    close_date = models.DateField(auto_now_add=True, blank=True)
+    active = models.BooleanField(default=True)
+    limit = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
 
 # Модель Транзакции
 class Transaction(models.Model):

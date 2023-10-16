@@ -12,4 +12,6 @@ urlpatterns = [
     path('registration/', views.temp_register, name='registration'),
     path('logout', views.temp_logout, name='logout'),
     # path('db/', views.DBViewer., name='db')
+    path('request_credit/', views.request_credit, name='request_credit'),
+
     ]

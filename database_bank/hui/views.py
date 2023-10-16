@@ -13,6 +13,8 @@ from django.contrib.auth.models import User, UserManager
 from django.contrib import messages
 from .forms import NewUserForm, UserForm
 from django.contrib.auth.forms import AuthenticationForm
+from .forms import CreditRequestForm
+from .models import Account, Credit
 # Create your views here.
 
 def home(request):
@@ -36,10 +38,13 @@ def temp_register(request):
         if not form.is_valid():
             return render(request, 'mybankapp/registration.html', {'is_busy': True, 'form': form})
 
-        form.save()
+        user=form.save()
 
         username = form.cleaned_data['username']
         password = form.cleaned_data['password1']
+        account=Account(username=user,owner=1,limit=1)
+
+        account.save()
         user = authenticate(request, username=username, password=password)
 
         login(request, user)
@@ -109,3 +114,30 @@ class DbViewer(TemplateView):
 
 
 
+def request_credit(request):
+    if request.method == 'POST':
+        form = CreditRequestForm(request.POST)
+        if form.is_valid():
+            credit_data = form.cleaned_data
+            print('hui')
+            # Создайте новую запись о кредите
+            new_credit = Credit(
+                account=request.user,  # Предполагается, что у пользователя есть связанный счет
+                amount=credit_data['amount'],
+                interest_rate=credit_data['interest_rate'],
+                term=credit_data['term']
+            )
+            new_credit.save()
+
+            # Обновите счет пользователя и кредитный счет
+            user_account = request.user.account
+            user_account.balance -= credit_data['amount']  # Уменьшаем счет на сумму кредита
+            user_account.credit_balance += credit_data['amount']  # Увеличиваем кредитный счет на сумму кредита
+            user_account.save()
+
+            return redirect('success_page')  # Перенаправьте пользователя на страницу успеха
+
+    else:
+        form = CreditRequestForm()
+
+    return render(request, 'mybankapp/credit.html', {'form': form})
