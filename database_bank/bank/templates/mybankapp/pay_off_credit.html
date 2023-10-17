@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background-color: #333; /* Темно-серый фон */
+      color: #fff; /* Белый текст */
+      font-family: Arial, sans-serif;
+    }
+
+    .repay-page {
+      width: 300px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #444; /* Темно-серый фон блока страницы */
+      border: 1px solid #555;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .form-label {
+      display: block;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background-color: #666; /* Серый фон инпутов */
+      border: none;
+      color: #fff; /* Белый текст в инпутах */
+      border-radius: 5px;
+    }
+
+    .repay-button {
+      margin-top: 20px;
+    }
+
+    .repay-button button {
+      background-color: #666; /* Серый фон кнопки */
+      color: #fff; /* Белый текст на кнопке */
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="repay-page">
+    <h2>Погашение кредита</h2>
+    <form action="" method="post">
+    {% csrf_token %}
+      <label class="form-label" for="credit-id">ID кредита:</label>
+      <input class="form-input" type="text" name="credit_id" id="credit_id">
+
+      <label class="form-label" for="payment-amount">Сумма платежа:</label>
+      <input class="form-input" type="text" name="payment_amount" id="payment_amount">
+        {% if not_enough %}
+            <h3 style="color: RED">У вас недостаточный баланс</h3>
+        {% endif %}
+        {% if is_closed %}
+            <h3 style="color: RED">Этот кредит уже закрыт</h3>
+        {% endif %}
+      <div class="repay-button">
+        <button type="submit">Погасить кредит</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
