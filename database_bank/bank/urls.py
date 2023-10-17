@@ -13,5 +13,6 @@ urlpatterns = [
     path('logout', views.temp_logout, name='logout'),
     # path('db/', views.DBViewer., name='db')
     path('request_credit/', views.request_credit, name='request_credit'),
-
+    path('pay_off/', views.pay_off_credit, name='pay_off_credit'),
+    path('tmp/', views.home, name='tmp'),
     ]

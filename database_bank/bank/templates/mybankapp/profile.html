@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background-color: #333; /* Темно-серый фон */
+      color: #fff; /* Белый текст */
+      font-family: Arial, sans-serif;
+    }
+
+    .profile {
+      width: 300px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #444; /* Темно-серый фон блока профиля */
+      border: 1px solid #555;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .balance {
+      font-size: 24px;
+      margin-top: 10px;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      background-color: #666; /* Серый фон кнопок */
+      color: #fff; /* Белый текст на кнопках */
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid #555;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #666; /* Серый фон заголовков таблицы */
+    }
+
+    tr:nth-child(even) {
+      background-color: #555; /* Серый фон четных строк таблицы */
+    }
+
+    tr:nth-child(odd) {
+      background-color: #444; /* Серый фон нечетных строк таблицы */
+    }
+  </style>
+</head>
+<body>
+  <div class="profile">
+    <h1>{{ user.username }}</h1>
+    <div class="balance">{{ account.balance }}</div>
+      <div>{{ account.currency }}</div>
+    <div class="buttons">
+      <button onclick="location.href='{% url 'request_credit' %}'">Оформить кредит</button>
+      <button onclick="location.href='{% url 'pay_off_credit' %}'">Погасить кредит</button>
+      <button onclick="location.href='{% url 'home' %}'">Домой</button>
+    </div>
+  </div>
+
+  <table>
+      <tr>
+          <th>id кредита</th>
+          <th>Остаток</th>
+          <th>Процентная ставка</th>
+          <th>Срок</th>
+          <th>Статус</th>
+      </tr>
+
+      {% for credit in credits %}
+
+      <tr>
+      <td>{{ credit.id  }}</td>
+      <td>{{ credit.amount  }}</td>
+      <td>{{ credit.interest_rate }}</td>
+      <td>{{ credit.term }}</td>
+      <td>{{ credit.getStatus }}</td>
+     </tr>
+
+      {% endfor %}
+
+  </table>
+</body>
+</html>

@@ -26,10 +26,6 @@ def home(request):
 
     return render(request, 'mybankapp/home.html', context=context)
 
-def search(request):
-    # Здесь вы можете добавить логику для обработки поисковых запросов
-    # и передать результаты поиска в шаблон
-    return render(request, 'mybankapp/search.html')
 
 
 def temp_register(request):
@@ -38,11 +34,11 @@ def temp_register(request):
         if not form.is_valid():
             return render(request, 'mybankapp/registration.html', {'is_busy': True, 'form': form})
 
-        user=form.save()
+        user = form.save()
 
         username = form.cleaned_data['username']
         password = form.cleaned_data['password1']
-        account=Account(username=user,owner=1,limit=1)
+        account = Account(username=user, owner=username, limit=1)
 
         account.save()
         user = authenticate(request, username=username, password=password)
@@ -71,26 +67,8 @@ def temp_logout(request):
 
 @login_required
 def profile(request):
-    return render(request, 'mybankapp/profile.html')
+    return render(request, 'mybankapp/profile.html', context={'credits': request.user.account.credit.all(), 'account': request.user.account})
 
-def user_login(request):
-    if request.method=='POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
-                return redirect("hui:profile")
-            else:
-                messages.error(request, "Invalid username or password.")
-
-        else:
-            messages.error(request, "Invalid username or password.")
-    form = AuthenticationForm()
-    return render(request=request, template_name="mybankapp/login.html", context={"form": form})
 
 
 ###### Kelbas ########
@@ -99,18 +77,34 @@ def user_login(request):
 from django.views.generic import TemplateView
 
 
+def pay_off_credit(request):
+    if request.POST:
+        credit_id = request.POST['credit_id']
+        payment_amount = request.POST['payment_amount']
 
-class RegistrationView(CreateView):
-    template_name = 'mybankapp/registration.html'
-    model = User
-    fields = ['username', 'password', ]
+        user_account = request.user.account
 
+        if user_account.balance < int(payment_amount):
+            return render(request, "mybankapp/tmp.html", context={'not_enough' : True})
 
-class DbViewer(TemplateView):
-    template_name = 'mybankapp/db.html'
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['latest']
+        if not Credit.objects.get(id=int(credit_id)).status:
+            return render(request, "mybankapp/tmp.html", context={'is_closed' : True})
+
+        user_account.balance -= int(payment_amount)
+
+        user_credit = Credit.objects.get(id=int(credit_id))
+
+        user_credit.amount -= int(payment_amount)
+
+        if user_credit.amount <= 0:
+            user_credit.status = False
+
+        user_account.save()
+        user_credit.save()
+
+        return redirect('profile')
+
+    return render(request, "mybankapp/tmp.html")
 
 
 
@@ -119,10 +113,10 @@ def request_credit(request):
         form = CreditRequestForm(request.POST)
         if form.is_valid():
             credit_data = form.cleaned_data
-            print('hui')
+            print('bank')
             # Создайте новую запись о кредите
             new_credit = Credit(
-                account=request.user,  # Предполагается, что у пользователя есть связанный счет
+                account=request.user.account,  # Предполагается, что у пользователя есть связанный счет
                 amount=credit_data['amount'],
                 interest_rate=credit_data['interest_rate'],
                 term=credit_data['term']
@@ -131,11 +125,12 @@ def request_credit(request):
 
             # Обновите счет пользователя и кредитный счет
             user_account = request.user.account
-            user_account.balance -= credit_data['amount']  # Уменьшаем счет на сумму кредита
-            user_account.credit_balance += credit_data['amount']  # Увеличиваем кредитный счет на сумму кредита
+            user_account.balance += credit_data['amount']  # Уменьшаем счет на сумму кредита
             user_account.save()
 
-            return redirect('success_page')  # Перенаправьте пользователя на страницу успеха
+            user_account.credit.add(new_credit)
+
+            return redirect('profile')  # Перенаправьте пользователя на страницу успеха
 
     else:
         form = CreditRequestForm()
