@@ -70,9 +70,22 @@
     <h1>{{ user.username }}</h1>
     <div class="balance">{{ account.balance }}</div>
       <div>{{ account.currency }}</div>
+
+      {% if currency == "RUB" %}
+            <button onclick="location.href='{% url 'profile' 'USD' %}'">USD</button>
+            <button onclick="location.href='{% url 'profile' 'EUR' %}'">EUR</button>
+      {% elif currency == "USD" %}
+            <button onclick="location.href='{% url 'profile' 'RUB' %}'">RUB</button>
+            <button onclick="location.href='{% url 'profile' 'EUR' %}'">EUR</button>
+      {% elif currency == "EUR" %}
+            <button onclick="location.href='{% url 'profile' 'RUB' %}'">RUB</button>
+            <button onclick="location.href='{% url 'profile' 'USD' %}'">USD</button>
+      {% endif %}
+
+
     <div class="buttons">
-      <button onclick="location.href='{% url 'request_credit' %}'">Оформить кредит</button>
-      <button onclick="location.href='{% url 'pay_off_credit' %}'">Погасить кредит</button>
+      <button onclick="location.href='{% url 'request_credit' currency %}'">Оформить кредит</button>
+      <button onclick="location.href='{% url 'pay_off_credit' currency %}'">Погасить кредит</button>
       <button onclick="location.href='{% url 'home' %}'">Домой</button>
     </div>
   </div>
