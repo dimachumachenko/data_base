@@ -15,4 +15,5 @@ urlpatterns = [
     path('request_credit/<str:currency>', views.request_credit, name='request_credit'),
     path('pay_off/<str:currency>', views.pay_off_credit, name='pay_off_credit'),
     path('tmp/', views.tmp, name='tmp'),
+    path('search/', views.search, name='search'),
     ]

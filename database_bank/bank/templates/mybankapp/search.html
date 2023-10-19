@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск банка</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        form {
+            background-color: #ccc;
+            padding: 20px;
+            display: inline-block;
+            border-radius: 5px;
+        }
+
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #666;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #444;
+            color: #fff;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Поиск</h1>
+        <form action="" method="POST">
+        {% csrf_token %}
+            <label for="username">Пользователь:</label>
+            <select id="username" name="username">
+                {% for person in persons %}
+                <option value="{{ person.username }}">{{ person.username }}</option>
+                {% endfor %}
+
+            </select>
+            <input type="submit" value="Поиск">
+        </form>
+        <table>
+            <tr>
+                <th>Никнейм:</th>
+                <th>ID счёта:</th>
+                <th>Валюта:</th>
+                <th>Баланс:</th>
+            </tr>
+
+            {% for account in accounts %}
+             <tr>
+                <th>{{ username }}</th>
+                <th>{{ account.id }}</th>
+                <th>{{ account.currency }}</th>
+                <th>{{ account.balance }}</th>
+                </tr>
+            {% endfor %}
+            <!-- Здесь будут отображаться результаты поиска -->
+        </table>
+        <button onclick="location.href='{% url 'home' %}'" style="margin-top: 10px">Домой</button>
+    </div>
+</body>
+</html>

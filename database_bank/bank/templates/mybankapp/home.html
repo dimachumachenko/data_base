@@ -33,13 +33,25 @@
             display: block;
         }
 
-        /* Стили для надписи по центру страницы */
+        /* Скрытые стили для надписи по центру страницы и блока с партнерами */
         .welcome-message {
             text-align: center;
             margin-top: 50px;
             font-size: 24px;
             font-weight: bold;
+            display: block;
         }
+
+        .partners {
+            text-align: center;
+            display: none;
+        }
+
+        .about-us {
+            text-align: center;
+            display: none;
+        }
+
         /* Дополнительные стили по вашему усмотрению */
     </style>
 </head>
@@ -49,11 +61,12 @@
     </header>
     <nav>
         <ul>
-            <li><a href="#">Главная</a></li>
+            <li><a href="#" id="welcomeButton">Главная</a></li>
             <li><a href="#">XML</a></li>
             <li><a href="#">RSS</a></li>
             <li><a href={% url 'profile' 'RUB'%}>Профиль</a></li>
-            <li><a href="#">О нас</a></li>
+            <li><a href="#" id="partnersButton">Партнеры</a></li>
+            <li><a href="#" id="aboutUsButton">О нас</a></li>
             <li class="dropdown">
                 <a href="#" class="dropbtn">Сервисы</a>
                 <div class="dropdown-content">
@@ -65,10 +78,10 @@
                 <a href="#">Базы данных</a>
                 <div class="dropdown-content">
                     <a href={% url 'tmp' %}>Статистика</a>
+                    <a href={% url 'search' %}>Поиск</a>
+
                 </div>
             </li>
-
-
             {% if is_authenticated %}
                 <li style="margin-left: 1211px"><a href="{% url 'logout'  %}">Выйти</a></li>
                 <li><h3 style="color: white">{{ request.user }}</h3></li>
@@ -76,22 +89,76 @@
                 <li style="margin-left: 900px"><a href="{% url 'registration' %}">Регистрация</a></li>
                 <li ><a href="{% url 'login' %}">Вход</a></li>
             {% endif %}
-
-
         </ul>
     </nav>
     <section>
-
-        <!-- Добавляем надпись по центру страницы -->
-        <div class="welcome-message">
+        <!-- Добавляем надписи и блок с партнерами -->
+        <div class="welcome-message" id="welcomeMessage">
             Добро пожаловать в базу данных "Банк".<br>
             Для работы с сайтом воспользуйтесь меню, которое находится сверху сайта. На сайте реализована работа с базой данных, а также предоставлена информация о БД и предметной области.<br>
             Просим обратить внимание, что для добавления данных потребуется авторизоваться (войти в учётную запись или зарегистрироваться, если у вас её нет).<br>
             Приятной работы!
         </div>
+        <div class="partners" id="partnersBlock">
+            <h2>Наши партнеры</h2>
+            <img src="{% static 'sber.jpg' %}" alt="Партнер 1" style="max-width: 300px; max-height: 300px">
+            <p>
+                <div class="company-info">
+                    <h1>Сбербанк</h1>
+                    <p>Адрес: Россия, Москва, улица Вавилова, 19</p>
+                    <p>Телефон: +7 800 555-55-50</p>
+                    <p>Сайт: <a href="https://www.sberbank.ru">sberbank.ru</a></p>
+                </div>
+            </p>
+            <img src="{% static 'partner_image2.jpg' %}" alt="Партнер 2">
+            <p>
+                <div class="company-info">
+                    <h1>ВТБ</h1>
+                    <p>Адрес: Россия, Москва, улица Мясницкая, 35</p>
+                    <p>Телефон: +7 495 739-22-22</p>
+                    <p>Сайт: <a href="https://www.vtb.ru">vtb.ru</a></p>
+                </div>
+            </p>
+        </div>
+        <div class="about-us" id="aboutUsBlock">
+            <div class="frame">
+                <p>Чумаченко Дмитрий</p>
+                <p>Группа ИВТ-Б20</p>
+                <p>ИАТЭ НИЯУ МИФИ</p>
+                <p>Разработка сайта и БД, стилизация страниц. Использование HTML, CSS, JavaScript, Python(Django), SQL</p>
+                <p>Контакты:</p>
+                <p>Email: simulacrum134308.d@gmail.com</p>
+            </div>
+        </div>
     </section>
-    <footer
-        class="footer">© 2023 Чумаченко Дмитрий   НИЯУ МИФИ
-    </footer>
+    <footer class="footer">© 2023 Чумаченко Дмитрий   НИЯУ МИФИ</footer>
+
+    <script>
+        // JavaScript для скрытия и отображения блоков при клике на "Главная", "Партнеры" и "О нас"
+        const welcomeMessage = document.getElementById("welcomeMessage");
+        const partnersBlock = document.getElementById("partnersBlock");
+        const aboutUsBlock = document.getElementById("aboutUsBlock");
+        const welcomeButton = document.getElementById("welcomeButton");
+        const partnersButton = document.getElementById("partnersButton");
+        const aboutUsButton = document.getElementById("aboutUsButton");
+
+        welcomeButton.addEventListener("click", () => {
+            welcomeMessage.style.display = "block"; // Показываем надпись
+            partnersBlock.style.display = "none"; // Скрываем блок с партнерами
+            aboutUsBlock.style.display = "none"; // Скрываем блок "О нас"
+        });
+
+        partnersButton.addEventListener("click", () => {
+            welcomeMessage.style.display = "none"; // Скрываем надпись
+            partnersBlock.style.display = "block"; // Показываем блок с партнерами
+            aboutUsBlock.style.display = "none"; // Скрываем блок "О нас"
+        });
+
+        aboutUsButton.addEventListener("click", () => {
+            welcomeMessage.style.display = "none"; // Скрываем надпись
+            partnersBlock.style.display = "none"; // Скрываем блок с партнерами
+            aboutUsBlock.style.display = "block"; // Показываем блок "О нас"
+        });
+    </script>
 </body>
 </html>

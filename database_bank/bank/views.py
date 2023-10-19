@@ -135,7 +135,6 @@ def request_credit(request, currency):
         form = CreditRequestForm(request.POST)
         if form.is_valid():
             credit_data = form.cleaned_data
-            print('bank')
             # Создайте новую запись о кредите
             new_credit = Credit(
                 account=request.user.person.account_set.get(currency=currency),  # Предполагается, что у пользователя есть связанный счет
@@ -172,4 +171,18 @@ def tmp(request):
         'stat_7': len(Account.objects.all().filter(currency="RUB").filter(balance__gte=10000000)),
         'stat_8': len(Account.objects.all().filter(currency="USD").filter(balance__gte=10000000)),
         'stat_9': len(Account.objects.all().filter(currency="EUR").filter(balance__gte=10000000)),
+    })
+
+
+def search(request):
+    if request.POST:
+        username = request.POST['username']
+        return render(request, 'mybankapp/search.html', context={
+            'persons': Person.objects.all(),
+            'username': username,
+            'accounts': Account.objects.all().filter(person_id=Person.objects.all().get(username=username).id)
+        })
+
+    return render(request, 'mybankapp/search.html', context={
+        'persons': Person.objects.all(),
     })
