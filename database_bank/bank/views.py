@@ -105,15 +105,15 @@ def pay_off_credit(request, currency):
         credit_id = request.POST['credit_id']
         payment_amount = request.POST['payment_amount']
 
-        user_account = request.user.person
+        user_account = request.user.person.account_set.get(currency=currency)
 
-        if user_account.account_set.get(currency=currency).balance < int(payment_amount):
-            return render(request, "mybankapp/tmp.html", context={'not_enough' : True})
+        if user_account.balance < int(payment_amount):
+            return render(request, "mybankapp/tmp.html", context={'not_enough': True})
 
         if not Credit.objects.get(id=int(credit_id)).status:
-            return render(request, "mybankapp/tmp.html", context={'is_closed' : True})
+            return render(request, "mybankapp/tmp.html", context={'is_closed': True})
 
-        user_account.account_set.get(currency=currency).balance -= int(payment_amount)
+        user_account.balance -= int(payment_amount)
 
         user_credit = Credit.objects.get(id=int(credit_id))
 
@@ -125,9 +125,9 @@ def pay_off_credit(request, currency):
         user_account.save()
         user_credit.save()
 
-        return redirect('profile')
+        return redirect('profile', currency=currency)
 
-    return render(request, "mybankapp/tmp.html")
+    return render(request, "mybankapp/pay_off_credit.html")
 
 
 def request_credit(request, currency):
