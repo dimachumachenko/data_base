@@ -52,6 +52,19 @@
             display: none;
         }
 
+        /* Стили для виджетов */
+        .widgets {
+            text-align: center;
+            display: none;
+        }
+
+        .widget {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
         /* Дополнительные стили по вашему усмотрению */
     </style>
 </head>
@@ -67,11 +80,15 @@
             <li><a href={% url 'profile' 'RUB'%}>Профиль</a></li>
             <li><a href="#" id="partnersButton">Партнеры</a></li>
             <li><a href="#" id="aboutUsButton">О нас</a></li>
+            <li><a href="#" id="widgetsButton">Сервисы</a></li>
             <li class="dropdown">
                 <a href="#" class="dropbtn">Сервисы</a>
                 <div class="dropdown-content">
-                    <a href="#">Виджеты</a>
-                    <a href="#">Погода</a>
+                    <a href="#" id="timeWidgetButton">Время</a>
+                    <a href="#" id="calculatorWidgetButton">Калькулятор</a>
+                    <a href="#" id="weatherWidgetButton">Погода</a>
+                    <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+                    <div class="elfsight-app-3425d6c7-144c-4f99-80f8-a4daba9ddc88"></div>
                 </div>
             </li>
             <li class="dropdown">
@@ -79,17 +96,20 @@
                 <div class="dropdown-content">
                     <a href={% url 'tmp' %}>Статистика</a>
                     <a href={% url 'search' %}>Поиск</a>
-
                 </div>
             </li>
             {% if is_authenticated %}
-                <li style="margin-left: 1211px"><a href="{% url 'logout'  %}">Выйти</a></li>
+                <li style="margin-left: 1700px"><a href="{% url 'logout'  %}">Выйти</a></li>
                 <li><h3 style="color: white">{{ request.user }}</h3></li>
             {% else %}
                 <li style="margin-left: 900px"><a href="{% url 'registration' %}">Регистрация</a></li>
                 <li ><a href="{% url 'login' %}">Вход</a></li>
             {% endif %}
         </ul>
+        <div class="search">
+    <input type="text" placeholder="Поиск">
+    <button>Поиск</button>
+</div>
     </nav>
     <section>
         <!-- Добавляем надписи и блок с партнерами -->
@@ -101,7 +121,7 @@
         </div>
         <div class="partners" id="partnersBlock">
             <h2>Наши партнеры</h2>
-            <img src="{% static 'sber.jpg' %}" alt="Партнер 1" style="max-width: 300px; max-height: 300px">
+            <img src="{% static '/jpg/partner_image1.jpg' %}" alt="Партнер 1">
             <p>
                 <div class="company-info">
                     <h1>Сбербанк</h1>
@@ -122,43 +142,104 @@
         </div>
         <div class="about-us" id="aboutUsBlock">
             <div class="frame">
-                <p>Чумаченко Дмитрий</p>
+                <p>Михальченко Дмитрий</p>
                 <p>Группа ИВТ-Б20</p>
                 <p>ИАТЭ НИЯУ МИФИ</p>
-                <p>Разработка сайта и БД, стилизация страниц. Использование HTML, CSS, JavaScript, Python(Django), SQL</p>
+                <p>Разработка сайта и БД, стилизация страниц. Использование HTML, CSS, JavaScript, PHP, SQL</p>
                 <p>Контакты:</p>
-                <p>Email: simulacrum134308.d@gmail.com</p>
+                <p>Email: mikhalchenkode20@oiate.ru</p>
+            </div>
+        </div>
+        <div class="widgets" id="widgetsBlock">
+            <div class="widget" id="timeWidget">
+                <h2>Время</h2>
+                <p id="time">Здесь будет показано текущее время.</p>
+            </div>
+            <div class="widget" id="calculatorWidget">
+                <h2>Калькулятор</h2>
+                <p>Используйте калькулятор:</p>
+                <input type="text" id="calculatorInput" placeholder="Введите выражение">
+                <button id="calculateButton">Рассчитать</button>
+                <p id="result">Результат: </p>
             </div>
         </div>
     </section>
     <footer class="footer">© 2023 Чумаченко Дмитрий   НИЯУ МИФИ</footer>
 
     <script>
-        // JavaScript для скрытия и отображения блоков при клике на "Главная", "Партнеры" и "О нас"
+        // JavaScript для скрытия и отображения блоков при клике на соответствующие кнопки
         const welcomeMessage = document.getElementById("welcomeMessage");
         const partnersBlock = document.getElementById("partnersBlock");
         const aboutUsBlock = document.getElementById("aboutUsBlock");
+        const widgetsBlock = document.getElementById("widgetsBlock");
         const welcomeButton = document.getElementById("welcomeButton");
         const partnersButton = document.getElementById("partnersButton");
         const aboutUsButton = document.getElementById("aboutUsButton");
+        const widgetsButton = document.getElementById("widgetsButton");
+
+        const timeWidget = document.getElementById("timeWidget");
+        const timeElement = document.getElementById("time");
+
+        const calculatorWidget = document.getElementById("calculatorWidget");
+        const calculatorInput = document.getElementById("calculatorInput");
+        const calculateButton = document.getElementById("calculateButton");
+        const resultElement = document.getElementById("result");
+
+
+
 
         welcomeButton.addEventListener("click", () => {
-            welcomeMessage.style.display = "block"; // Показываем надпись
-            partnersBlock.style.display = "none"; // Скрываем блок с партнерами
-            aboutUsBlock.style.display = "none"; // Скрываем блок "О нас"
+            welcomeMessage.style.display = "block";
+            partnersBlock.style.display = "none";
+            aboutUsBlock.style.display = "none";
+            widgetsBlock.style.display = "none";
         });
 
         partnersButton.addEventListener("click", () => {
-            welcomeMessage.style.display = "none"; // Скрываем надпись
-            partnersBlock.style.display = "block"; // Показываем блок с партнерами
-            aboutUsBlock.style.display = "none"; // Скрываем блок "О нас"
+            welcomeMessage.style.display = "none";
+            partnersBlock.style.display = "block";
+            aboutUsBlock.style.display = "none";
+            widgetsBlock.style.display = "none";
         });
 
         aboutUsButton.addEventListener("click", () => {
-            welcomeMessage.style.display = "none"; // Скрываем надпись
-            partnersBlock.style.display = "none"; // Скрываем блок с партнерами
-            aboutUsBlock.style.display = "block"; // Показываем блок "О нас"
+            welcomeMessage.style.display = "none";
+            partnersBlock.style.display = "none";
+            aboutUsBlock.style.display = "block";
+            widgetsBlock.style.display = "none";
+        });
+
+        widgetsButton.addEventListener("click", () => {
+            welcomeMessage.style.display = "none";
+            partnersBlock.style.display = "none";
+            aboutUsBlock.style.display = "none";
+            widgetsBlock.style.display = "block";
+        });
+
+        // JavaScript для виджета времени
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, "0");
+            const minutes = now.getMinutes().toString().padStart(2, "0");
+            const seconds = now.getSeconds().toString().padStart(2, "0");
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            timeElement.textContent = `Текущее время: ${timeString}`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // JavaScript для виджета калькулятора
+        calculateButton.addEventListener("click", () => {
+            const expression = calculatorInput.value;
+            try {
+                const result = eval(expression);
+                resultElement.textContent = `Результат: ${result}`;
+            } catch (error) {
+                resultElement.textContent = "Ошибка в выражении";
+            }
         });
     </script>
+
 </body>
 </html>

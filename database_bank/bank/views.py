@@ -94,7 +94,7 @@ def profile(request, currency):
 
 
 
-###### Kelbas ########
+
 
 
 from django.views.generic import TemplateView
