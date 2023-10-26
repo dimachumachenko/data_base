@@ -15,7 +15,9 @@ from .forms import UserForm
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CreditRequestForm
 from .models import Account, Credit, Person
-
+from django.views.generic.list import ListView
+from .models import News
+from django.contrib.syndication.views import Feed
 
 # Create your views here.
 
@@ -186,3 +188,35 @@ def search(request):
     return render(request, 'mybankapp/search.html', context={
         'persons': Person.objects.all(),
     })
+
+
+class NewsListView(ListView):
+    model = News
+    template_name = '/mybankapp/news_list.html'
+    context_object_name = 'news'
+    queryset = News.objects.order_by('-pub_date')
+    paginate_by = 10
+
+
+
+
+
+class NewsFeed(Feed):
+    title = "Моя RSS-лента"
+    link = "/https://edition.cnn.com//"
+    description = "Последние новости с моего сайта и внешнего источника"
+
+    def items(self):
+        # Здесь вы можете объединить новости с вашего сайта и внешнего источника
+        # В этом примере, просто добавим новости из вашей модели
+        return News.objects.all().order_by('-pub_date')
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.content
+
+    def item_link(self, item):
+        # Укажите ссылку на страницу с деталями новости
+        return '/news/{}/'.format(item.id)

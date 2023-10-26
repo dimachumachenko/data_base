@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список новостей</title>
+</head>
+<body>
+    <h1>Список новостей</h1>
+
+    <ul>
+        {% for news_item in news %}
+            <li>
+                <h2><a href="{{ news_item.get_absolute_url }}">{{ news_item.title }}</a></h2>
+                <p>{{ news_item.pub_date|date:"F d, Y" }}</p>
+                <p>{{ news_item.content }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'news-feed' %}">Подписаться на RSS-ленту</a></p>
+</body>
+</html>

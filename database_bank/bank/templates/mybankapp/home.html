@@ -76,8 +76,8 @@
         <ul>
             <li><a href="#" id="welcomeButton">Главная</a></li>
             <li><a href="#">XML</a></li>
-            <li><a href="#">RSS</a></li>
-            <li><a href={% url 'profile' 'RUB'%}>Профиль</a></li>
+            <li><a href="{% url 'news_list' %}">RSS</a></li>
+            <a href={% url 'profile' 'RUB' %}>Профиль</a>
             <li><a href="#" id="partnersButton">Партнеры</a></li>
             <li><a href="#" id="aboutUsButton">О нас</a></li>
             <li><a href="#" id="widgetsButton">Сервисы</a></li>
@@ -86,10 +86,13 @@
                 <div class="dropdown-content">
                     <a href="#" id="timeWidgetButton">Время</a>
                     <a href="#" id="calculatorWidgetButton">Калькулятор</a>
-                    <a href="#" id="weatherWidgetButton">Погода</a>
+                    
                     <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
                     <div class="elfsight-app-3425d6c7-144c-4f99-80f8-a4daba9ddc88"></div>
+                    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A4a58802d2a3ddc605ff685e89b652668701f649a6dd34df5f3a6f459fc15a32c&amp;width=500&amp;height=400&amp;lang=en_FR&amp;scroll=true"></script>
+
                 </div>
+
             </li>
             <li class="dropdown">
                 <a href="#">Базы данных</a>
@@ -142,12 +145,12 @@
         </div>
         <div class="about-us" id="aboutUsBlock">
             <div class="frame">
-                <p>Михальченко Дмитрий</p>
+                <p>Чумвченко Дмитрий</p>
                 <p>Группа ИВТ-Б20</p>
                 <p>ИАТЭ НИЯУ МИФИ</p>
-                <p>Разработка сайта и БД, стилизация страниц. Использование HTML, CSS, JavaScript, PHP, SQL</p>
+                <p>Разработка сайта и БД, стилизация страниц. Использование HTML, CSS, JavaScript, Python(Django), SQL</p>
                 <p>Контакты:</p>
-                <p>Email: mikhalchenkode20@oiate.ru</p>
+                <p>Email: simulacrum134308.d@gmail.com</p>
             </div>
         </div>
         <div class="widgets" id="widgetsBlock">
