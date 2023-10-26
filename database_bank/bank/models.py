@@ -142,9 +142,8 @@ class LoanApplication(models.Model):
     application_date = models.DateField()
 
 
-
 class News(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    pub_date = models.DateTimeField()
+    title = models.CharField(max_length=200, unique=True)
+    content = models.TextField(blank=True)
+    link = models.CharField(max_length=400, blank=True)
 

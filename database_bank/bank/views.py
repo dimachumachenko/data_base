@@ -1,5 +1,7 @@
+import feedparser
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import path, reverse_lazy
@@ -190,33 +192,32 @@ def search(request):
     })
 
 
-class NewsListView(ListView):
-    model = News
-    template_name = '/mybankapp/news_list.html'
-    context_object_name = 'news'
-    queryset = News.objects.order_by('-pub_date')
-    paginate_by = 10
+def make_rss(request):
+    rss_url = 'https://www.vedomosti.ru/rss/news.xml'
+    feed = feedparser.parse(rss_url)
+    for entry in reversed(feed.entries):
+        try:
+            new = News(title=entry.title, link=entry.link)
+            new.save()
+        except IntegrityError as e:
+            pass
+
+    context = {
+        'feed': reversed(News.objects.all())
+    }
+
+    return render(request, 'mybankapp/news_list.html', context=context)
 
 
-
-
-
-class NewsFeed(Feed):
-    title = "Моя RSS-лента"
-    link = "/https://edition.cnn.com//"
-    description = "Последние новости с моего сайта и внешнего источника"
-
-    def items(self):
-        # Здесь вы можете объединить новости с вашего сайта и внешнего источника
-        # В этом примере, просто добавим новости из вашей модели
-        return News.objects.all().order_by('-pub_date')
-
-    def item_title(self, item):
-        return item.title
-
-    def item_description(self, item):
-        return item.content
-
-    def item_link(self, item):
-        # Укажите ссылку на страницу с деталями новости
-        return '/news/{}/'.format(item.id)
+def create_news(request):
+    if request.POST:
+        title = request.POST['title']
+        content = request.POST['content']
+        link = request.POST['link']
+        try:
+            new = News(title=title, content=content, link=link)
+            new.save()
+        except IntegrityError as e:
+            pass
+        return redirect('news_list')
+    return render(request, 'mybankapp/create_news.html')

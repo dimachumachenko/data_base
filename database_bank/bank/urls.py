@@ -1,10 +1,8 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
-from .views import NewsListView
-from .views import NewsListView, NewsFeed
 
-app_name = 'mybankapp'
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -21,7 +19,6 @@ urlpatterns = [
     path('pay_off/<str:currency>', views.pay_off_credit, name='pay_off_credit'),
     path('tmp/', views.tmp, name='tmp'),
     path('search/', views.search, name='search'),
-    path('news/', NewsListView.as_view(), name='news_list'),
-    path('feed/', NewsFeed(), name='news-feed'),
-
+    path('news/', views.make_rss, name='news_list'),
+    path('add_news/', views.create_news, name='create_news')
     ]

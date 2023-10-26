@@ -1,22 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Список новостей</title>
+    <title>RSS Лента</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        #header {
+            background-color: #555;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #content {
+            margin: 20px;
+        }
+
+        #rss-feed {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #back-button {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Список новостей</h1>
-
-    <ul>
-        {% for news_item in news %}
-            <li>
-                <h2><a href="{{ news_item.get_absolute_url }}">{{ news_item.title }}</a></h2>
-                <p>{{ news_item.pub_date|date:"F d, Y" }}</p>
-                <p>{{ news_item.content }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <p><a href="{% url 'news-feed' %}">Подписаться на RSS-ленту</a></p>
+    <div id="header">
+        <h1>RSS Лента</h1>
+    </div>
+    <div id="test" style="text-align: right">
+    <a href={% url 'create_news' %}>Добавить новость</a>
+    </div>
+    <div id="content">
+        <div id="rss-feed">
+            <ul>
+                {% for entry in feed %}
+                <li>
+                    <h2>{{ entry.title }}</h2>
+                    <p>{{ entry.content }}</p>
+                    <a href="{{ entry.link }}" target="_blank">Подробнее</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <a href="/" id="back-button">Назад</a>
+    </div>
 </body>
 </html>
