@@ -59,12 +59,17 @@
         <form action="" method="POST">
         {% csrf_token %}
             <label for="username">Пользователь:</label>
-            <select id="username" name="username">
-                {% for person in persons %}
-                <option value="{{ person.username }}">{{ person.username }}</option>
-                {% endfor %}
+{#            <select id="username" name="username">#}
+{#                {% for person in persons %}#}
+{#                <option value="{{ person.username }}">{{ person.username }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+            <input type="text" id="username" name="username">
+            <label for="min_balance">Минимальный баланс:</label>
+            <input type="text" id="min_balance" name="min_balance" value="0">
+            <label for="max_balance">Максимальный баланс:</label>
+            <input type="text" id="max_balance" name="max_balance" value="0">
 
-            </select>
             <input type="submit" value="Поиск">
         </form>
         <table>
@@ -77,7 +82,7 @@
 
             {% for account in accounts %}
              <tr>
-                <th>{{ username }}</th>
+                <th>{{ account.person.username }}</th>
                 <th>{{ account.id }}</th>
                 <th>{{ account.currency }}</th>
                 <th>{{ account.balance }}</th>

@@ -20,7 +20,7 @@ from .models import Account, Credit, Person
 from django.views.generic.list import ListView
 from .models import News
 from django.contrib.syndication.views import Feed
-
+import xml.etree.ElementTree as ET
 # Create your views here.
 
 def home(request):
@@ -180,17 +180,29 @@ def tmp(request):
 
 def search(request):
     if request.POST:
-        username = request.POST['username']
+        username = None
+        filtered_accounts = None
+        if 'username' in request.POST:
+            filtered_accounts = Account.objects.all()
+        else:
+            username = request.POST['username']
+            filtered_accounts = Account.objects.all().filter(person_id=Person.objects.all().get(username=username).id)
+
+        min_balance = request.POST['min_balance']
+        filtered_accounts = filtered_accounts.filter(balance__gt=min_balance)
+        max_balance = request.POST['max_balance']
+        if int(max_balance) != 0:
+            filtered_accounts = filtered_accounts.filter(balance__lt=max_balance)
+
         return render(request, 'mybankapp/search.html', context={
             'persons': Person.objects.all(),
             'username': username,
-            'accounts': Account.objects.all().filter(person_id=Person.objects.all().get(username=username).id)
+            'accounts': filtered_accounts
         })
 
     return render(request, 'mybankapp/search.html', context={
         'persons': Person.objects.all(),
     })
-
 
 def make_rss(request):
     rss_url = 'https://www.vedomosti.ru/rss/news.xml'
@@ -203,7 +215,7 @@ def make_rss(request):
             pass
 
     context = {
-        'feed': reversed(News.objects.all())
+        'feed': reversed(News.objects.all()[:10])
     }
 
     return render(request, 'mybankapp/news_list.html', context=context)
@@ -221,3 +233,28 @@ def create_news(request):
             pass
         return redirect('news_list')
     return render(request, 'mybankapp/create_news.html')
+
+
+
+def datas_as_xml(reqest):
+    data_from_db=Account.objects.all()
+
+    root=ET.Element("data")
+
+    for item in data_from_db:
+        xml_element=ET.fromstring(item.as_xml())
+        root.append(xml_element)
+
+
+    xml_string=ET.tostring(root,encoding='utf-8', method='xml')
+    return HttpResponse(xml_string,content_type='application/xml')
+
+
+def data_as_xml(request):
+    data_from_db = Account.objects.all()
+    return render(request, 'xml.xml', {'items': data_from_db}, content_type='application/xml')
+
+
+
+
+

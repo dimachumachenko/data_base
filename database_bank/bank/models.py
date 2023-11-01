@@ -25,6 +25,8 @@ class Credit(models.Model):
             return 'Действителен'
         return 'Погашен'
 
+    def as_xml(self):
+        return f'<item><amount>{self.amount}</amount><interest_rate>{self.interest_rate}</interest_rate><term>{self.term}</term><status>{self.status}</status></item>'
 
 class Person(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, to_field='username')

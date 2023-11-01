@@ -20,5 +20,6 @@ urlpatterns = [
     path('tmp/', views.tmp, name='tmp'),
     path('search/', views.search, name='search'),
     path('news/', views.make_rss, name='news_list'),
-    path('add_news/', views.create_news, name='create_news')
+    path('add_news/', views.create_news, name='create_news'),
+    path('xml/', views.data_as_xml, name='xml'),
     ]
