@@ -205,17 +205,23 @@ def search(request):
     })
 
 def make_rss(request):
-    rss_url = 'https://www.vedomosti.ru/rss/news.xml'
+    # rss_url = 'https://www.vedomosti.ru/rss/news.xml'
+    rss_url = 'http://feeds.bbci.co.uk/news/world/rss.xml'
     feed = feedparser.parse(rss_url)
-    for entry in reversed(feed.entries):
+
+    description = ''
+
+    for entry in feed.entries:
+        if 'description' in feed.entries[0]:
+            description = entry.description
         try:
-            new = News(title=entry.title, link=entry.link)
+            new = News(title=entry.title, link=entry.link, content=description)
             new.save()
         except IntegrityError as e:
             pass
 
     context = {
-        'feed': reversed(News.objects.all()[:10])
+        'feed': News.objects.all()[::-1][:10]
     }
 
     return render(request, 'mybankapp/news_list.html', context=context)
@@ -235,6 +241,28 @@ def create_news(request):
     return render(request, 'mybankapp/create_news.html')
 
 
+def add_rss(request):
+    if request.POST:
+        link = request.POST['link']
+        feed = feedparser.parse(link)
+
+        description = ''
+
+        for entry in feed.entries:
+            if 'description' in feed.entries[0]:
+                description = entry.description
+            try:
+                new = News(title=entry.title, link=entry.link, content=description)
+                new.save()
+            except IntegrityError as e:
+                pass
+
+        context = {
+            'feed': News.objects.all()[::-1][:10]
+        }
+
+        return render(request, 'mybankapp/news_list.html', context=context)
+    return render(request, 'mybankapp/add_rss.html')
 
 def datas_as_xml(reqest):
     data_from_db=Account.objects.all()

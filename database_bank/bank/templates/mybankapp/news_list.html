@@ -40,16 +40,20 @@
     </div>
     <div id="test" style="text-align: right">
     <a href={% url 'create_news' %}>Добавить новость</a>
+    <a href={% url 'add_rss' %}>Добавить RSS ленту</a>
+
     </div>
     <div id="content">
         <div id="rss-feed">
             <ul>
                 {% for entry in feed %}
+                <div  style="border-style: groove;">
                 <li>
                     <h2>{{ entry.title }}</h2>
                     <p>{{ entry.content }}</p>
                     <a href="{{ entry.link }}" target="_blank">Подробнее</a>
                 </li>
+                </div>
                 {% endfor %}
             </ul>
         </div>

@@ -22,4 +22,5 @@ urlpatterns = [
     path('news/', views.make_rss, name='news_list'),
     path('add_news/', views.create_news, name='create_news'),
     path('xml/', views.data_as_xml, name='xml'),
+    path('add_rss/', views.add_rss, name='add_rss'),
     ]
