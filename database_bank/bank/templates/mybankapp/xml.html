@@ -1,13 +1,150 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<data>
-    {% for item in items %}
-    <item>
-        <amount>{{ item.name }}</amount>
-        <interest_rate>{{ item.description }}</interest_rate>
-        <term>{{ item.term }}</term>
-        <status>{{ item.status }}</status>
-        <
-        <!-- Добавьте другие поля вашей модели -->
-    </item>
-    {% endfor %}
-</data>ml>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XML Data</title>
+    <style>
+        /* Стили */
+        body {
+            background: linear-gradient(to bottom, #f0f0f0, #c0c0c0);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        input[type="text"] {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        button {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+
+        #back-button {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #xmlDataDisplay {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            width: 80%;
+            display: none;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>XML Data</h1>
+
+    <input type="text" id="searchInput" placeholder="Введите текст для поиска">
+    <button id="searchButton">Поиск</button>
+
+    <table id="xmlTable">
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Interest Rate</th>
+                <th>Term</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button id="showXmlButton">Посмотреть XML</button>
+    <div id="xmlDataDisplay"></div>
+
+    <script>
+        // JavaScript для парсинга XML и поиска
+        var xmlData = "{{ xml_data|escapejs }}";
+
+        var parser = new DOMParser();
+        var xmlDoc = parser.parseFromString(xmlData, "text/xml");
+
+        var table = document.getElementById('xmlTable').getElementsByTagName('tbody')[0];
+
+        var items = xmlDoc.getElementsByTagName('item');
+        for (var i = 0; i < items.length; i++) {
+            var row = table.insertRow(-1);
+            var amountCell = row.insertCell(0);
+            var interestCell = row.insertCell(1);
+            var termCell = row.insertCell(2);
+            var statusCell = row.insertCell(3);
+
+            amountCell.innerHTML = items[i].getElementsByTagName('amount')[0].textContent;
+            interestCell.innerHTML = items[i].getElementsByTagName('interest_rate')[0].textContent;
+            termCell.innerHTML = items[i].getElementsByTagName('term')[0].textContent;
+            statusCell.innerHTML = items[i].getElementsByTagName('status')[0].textContent;
+        }
+
+        // Обработчик события поиска
+        document.getElementById('searchButton').addEventListener('click', function () {
+            var searchText = document.getElementById('searchInput').value.toLowerCase();
+            var rows = table.getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName('td');
+                var found = false;
+
+                for (var j = 0; j < cells.length; j++) {
+                    var cellText = cells[j].textContent.toLowerCase();
+
+                    if (cellText.indexOf(searchText) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        });
+
+        // Отображение XML-данных
+        document.getElementById('showXmlButton').addEventListener('click', function() {
+            var xmlDataDisplay = document.getElementById('xmlDataDisplay');
+            xmlDataDisplay.innerText = xmlData;
+            xmlDataDisplay.style.display = "block";
+        });
+    </script>
+    <a href="/" id="back-button">Назад</a>
+</body>
+</html>

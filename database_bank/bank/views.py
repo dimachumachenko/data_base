@@ -276,11 +276,35 @@ def datas_as_xml(reqest):
 
     xml_string=ET.tostring(root,encoding='utf-8', method='xml')
     return HttpResponse(xml_string,content_type='application/xml')
-
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 def data_as_xml(request):
-    data_from_db = Account.objects.all()
-    return render(request, 'xml.xml', {'items': data_from_db}, content_type='application/xml')
+
+    data_from_db = Credit.objects.all()  # Получаем данные из базы
+
+    root = Element("data")
+
+    for item in data_from_db:
+        xml_element = Element("item")
+        # Преобразуем логические значения в строки перед добавлением в XML
+        SubElement(xml_element, "amount").text = str(item.amount)
+        SubElement(xml_element, "interest_rate").text = str(item.interest_rate)
+        SubElement(xml_element, "term").text = str(item.term)
+        SubElement(xml_element, "status").text = str(item.status)
+        print(f"Amount: {item.amount}, Interest Rate: {item.interest_rate}, Term: {item.term}, Status: {item.status}")
+
+        root.append(xml_element)
+
+        xml_string = tostring(root, encoding='unicode')
+
+        # Создаем HTTP-ответ с XML-данными
+        #response = HttpResponse(xml_string)
+        #return response
+
+
+    xml_string = tostring(root, encoding='unicode')
+    return render(request, 'mybankapp/xml.html', {'xml_data': xml_string})
+
 
 
 
