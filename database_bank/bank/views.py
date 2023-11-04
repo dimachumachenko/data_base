@@ -205,7 +205,7 @@ def search(request):
     })
 
 def make_rss(request):
-    # rss_url = 'https://www.vedomosti.ru/rss/news.xml'
+    #rss_url = 'https://www.vedomosti.ru/rss/news.xml'
     rss_url = 'http://feeds.bbci.co.uk/news/world/rss.xml'
     feed = feedparser.parse(rss_url)
 
